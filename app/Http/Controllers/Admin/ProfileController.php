@@ -13,7 +13,7 @@ class ProfileController extends Controller
         return view('admin.profile.create');
     }
     
-    public function vreate()
+    public function create()
     {
         return redirect('admin/profile/create');
     }
