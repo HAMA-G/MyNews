@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // News Modelが扱えるようになる
 use App\News;
+use App\History;
+use Carbon\Carbon;
 
 class NewsController extends Controller
 {
@@ -54,15 +56,15 @@ class NewsController extends Controller
           }
           return view('admin.news.index', ['posts' => $posts, 'cond_title' => $cond_title]);
       }
-        public function edit(Request $request)
-  {
+    public function edit(Request $request)
+    {
       // News Modelからデータを取得する
       $news = News::find($request->id);
       if (empty($news)) {
         abort(404);    
       }
       return view('admin.news.edit', ['news_form' => $news]);
-  }
+    }
   
   public function update(Request $request)
   {
@@ -81,14 +83,18 @@ class NewsController extends Controller
           $news_form['image_path'] = $news->image_path;
       }
       
-      
       unset($news_form['_token']);
+      unset($news_form['image']);
       unset($news_form['remove']);
-      unset($news_form['_token']);
       // 該当するデータを上書きして保存する
       $news->fill($news_form)->save();
-
-      return redirect('admin/news');
+      
+      $history = new History();
+      $history->news_id = $news->id;
+      $history->edited_at = Carbon::now();
+      $history->save();
+      
+      return redirect('admin/news/');
   }
   
   public function delete(Request $request)
