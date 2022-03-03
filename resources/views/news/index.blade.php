@@ -15,6 +15,7 @@
                                     @endif
                                 </div>
                                 <div class="title p-2">
+                                    <p>最新記事</p>
                                     <h1>{{ str_limit($headline->title, 70) }}</h1>
                                 </div>
                             </div>
